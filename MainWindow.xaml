@@ -1,12 +1,43 @@
 ﻿<Window x:Class="CryptoViewer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CryptoViewer"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="CryptoViewer" Height="600" Width="800"
+        WindowStyle="None" AllowsTransparency="True">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <!-- Кастомный заголовок -->
+        <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" MouseLeftButtonDown="ColorZone_MouseLeftButtonDown">
+            <DockPanel>
+
+                <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    Click="CloseButton_Click">
+                    <materialDesign:PackIcon Kind="Close" />
+                </Button>
+                <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    Click="MaximizeButton_Click">
+                    <materialDesign:PackIcon Kind="WindowMaximize" />
+                </Button>
+                <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    Click="MinimizeButton_Click">
+                    <materialDesign:PackIcon Kind="WindowMinimize" />
+                </Button>
+                <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" 
+                           VerticalAlignment="Center" Margin="10,0,0,0"
+                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+            </DockPanel>
+        </materialDesign:ColorZone>
+
+        <!-- Основной контент -->
+        <Grid Grid.Row="1">
+            <ContentControl prism:RegionManager.RegionName="MainRegion" />
+        </Grid>
     </Grid>
 </Window>
+
+
