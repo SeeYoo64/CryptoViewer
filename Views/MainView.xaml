@@ -1,22 +1,21 @@
 ﻿<UserControl x:Class="CryptoViewer.Views.MainView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-    <Grid Background="{DynamicResource MaterialDesignPaper}">
-        <materialDesign:Card Padding="20" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel>
-                <TextBlock Text="Welcome to CryptoViewer!" 
-                           FontSize="24" 
-                           FontWeight="Bold"
-                           Style="{StaticResource MaterialDesignHeadline5TextBlock}" 
-                           HorizontalAlignment="Center" />
-                <materialDesign:PackIcon Kind="Bitcoin" Width="24" Height="24" HorizontalAlignment="Center" Margin="0,10,0,0" />
-                <Button Content="Test Button" 
-                        Style="{StaticResource MaterialDesignRaisedButton}" 
-                        Margin="10" 
-                        Width="150" 
-                        Click="Button_Click" />
-            </StackPanel>
-        </materialDesign:Card>
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:CryptoViewer.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{Binding ErrorMessage}" Foreground="Red" Margin="10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+        <ListBox Grid.Row="1" ItemsSource="{Binding Coins}" DisplayMemberPath="Name" Margin="10" />
     </Grid>
 </UserControl>
