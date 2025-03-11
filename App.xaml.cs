@@ -22,7 +22,10 @@ namespace CryptoViewer
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
 
             // Registering service as singletone
-            containerRegistry.RegisterSingleton<CoinGeckoService>(); 
+            containerRegistry.RegisterSingleton<CoinGeckoService>();
+
+            // Registering DetailsView
+            containerRegistry.RegisterForNavigation<DetailsView, DetailsViewModel>();
 
         }
 

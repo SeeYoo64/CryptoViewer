@@ -1,15 +1,15 @@
-﻿using Prism.Mvvm;
+﻿using CryptoViewer.Models;
 using CryptoViewer.Services;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CryptoViewer.Models;
+using System.Windows.Input;
 
 namespace CryptoViewer.ViewModels
 {
     public class MainViewModel : BindableBase
     {
         private readonly CoinGeckoService _coinGeckoService;
-        private string _title = "CryptoViewer Main Page";
+        private readonly IRegionManager _regionManager;
+        private string _title = "CryptoViewer - Top Currencies";
         private ObservableCollection<Coin> _coins;
         private string _errorMessage;
 
@@ -31,9 +31,13 @@ namespace CryptoViewer.ViewModels
             set => SetProperty(ref _errorMessage, value);
         }
 
-        public MainViewModel(CoinGeckoService coinGeckoService)
+        public ICommand NavigateToDetailsCommand { get; }
+
+        public MainViewModel(CoinGeckoService coinGeckoService, IRegionManager regionManager)
         {
             _coinGeckoService = coinGeckoService;
+            _regionManager = regionManager;
+            NavigateToDetailsCommand = new DelegateCommand<Coin>(NavigateToDetails);
             LoadCoinsAsync().ConfigureAwait(false);
         }
 
@@ -41,8 +45,8 @@ namespace CryptoViewer.ViewModels
         {
             try
             {
-                ErrorMessage = null; // Reset Error msg
-                var coins = await _coinGeckoService.GetTopCurrenciesAsync(10);
+                ErrorMessage = null;
+                var coins = await _coinGeckoService.GetTopCurrenciesAsync(10); // Загружаем топ-10
                 if (coins == null || coins.Count == 0)
                 {
                     ErrorMessage = "Failed to load currencies. Please check your internet connection or try again later.";
@@ -55,6 +59,18 @@ namespace CryptoViewer.ViewModels
             catch (Exception ex)
             {
                 ErrorMessage = $"Error loading currencies: {ex.Message}";
+            }
+        }
+
+        private void NavigateToDetails(Coin coin)
+        {
+            if (coin != null)
+            {
+                var parameters = new NavigationParameters
+                {
+                    { "CoinId", coin.Id }
+                };
+                _regionManager.RequestNavigate("MainRegion", "DetailsView", parameters);
             }
         }
     }

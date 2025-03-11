@@ -30,7 +30,6 @@ namespace CryptoViewer.Services
             try
             {
                 string url = BaseUrl + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + count + "&page=1&sparkline=false";
-                Debug.WriteLine(url);
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
                 
                 if (!response.IsSuccessStatusCode)
