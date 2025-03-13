@@ -18,11 +18,21 @@ namespace CryptoViewer.Models
 
         [JsonProperty("trade_url")]
         public string TradeUrl { get; set; }
+
+        [JsonProperty("volume")]
+        public decimal Volume { get; set; }
+
+        // Adding formatted strong for displaying price with symbol
+        [JsonIgnore]
+        public string FormattedLastPrice => $"{LastPrice} {Target?.ToUpper()}";
     }
 
     public class MarketInfo
     {
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("identifier")]
+        public string Identifier { get; set; }
     }
 }

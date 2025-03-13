@@ -1,6 +1,7 @@
 ﻿using CryptoViewer.Models;
 using CryptoViewer.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace CryptoViewer.ViewModels
@@ -46,13 +47,14 @@ namespace CryptoViewer.ViewModels
             try
             {
                 ErrorMessage = null;
-                var coins = await _coinGeckoService.GetTopCurrenciesAsync(10); // Загружаем топ-10
+                var coins = await _coinGeckoService.GetTopCurrenciesAsync(10);
                 if (coins == null || coins.Count == 0)
                 {
                     ErrorMessage = "Failed to load currencies. Please check your internet connection or try again later.";
                 }
                 else
                 {
+                    Debug.WriteLine(coins.Count);
                     Coins = new ObservableCollection<Coin>(coins);
                 }
             }

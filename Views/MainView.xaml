@@ -17,13 +17,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Заголовок -->
+        <!-- Title -->
         <TextBlock Grid.Row="0" Text="{Binding Title}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,10" />
 
-        <!-- Сообщение об ошибке -->
+        <!-- Error message -->
         <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,0,0,10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
-        <!-- Таблица валют -->
+        <!-- Spreadsheet of coins -->
         <materialDesign:Card Grid.Row="2" Padding="10">
             <DataGrid ItemsSource="{Binding Coins}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
                 <DataGrid.Columns>
