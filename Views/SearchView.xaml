@@ -16,7 +16,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Button and Searching field -->
+        <!-- Search input and button -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBox materialDesign:HintAssist.Hint="Enter coin name or symbol..." 
                      Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" 
@@ -28,8 +28,11 @@
         <!-- Error message -->
         <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,0,0,10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
-        <!-- List of result -->
-        <ListBox Grid.Row="1" ItemsSource="{Binding SearchResults}" Visibility="{Binding SearchResults, Converter={StaticResource NullToVisibilityConverter}}" Margin="0,0,0,10">
+        <!-- Search results -->
+        <ListBox Grid.Row="1" ItemsSource="{Binding SearchResults}" 
+         Visibility="{Binding SearchResults, Converter={StaticResource NullToVisibilityConverter}}" 
+         Margin="0,0,0,10" 
+         MouseDoubleClick="ListBox_MouseDoubleClick">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

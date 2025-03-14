@@ -55,7 +55,14 @@ namespace CryptoViewer.ViewModels
             if (navigationContext.Parameters.ContainsKey("CoinId"))
             {
                 CoinId = navigationContext.Parameters["CoinId"].ToString();
+                // Log the received CoinId
+                Debug.WriteLine($"DetailsViewModel: Received CoinId: {CoinId}");
                 LoadCoinDetailsAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                // Log if CoinId is not found
+                Debug.WriteLine("DetailsViewModel: No CoinId provided in navigation parameters.");
             }
         }
 

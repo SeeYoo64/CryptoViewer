@@ -5,12 +5,14 @@ using CryptoViewer.Models;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Diagnostics;
 
 namespace CryptoViewer.ViewModels
 {
     public class SearchViewModel : BindableBase
     {
         private readonly CoinGeckoService _coinGeckoService;
+        private readonly IRegionManager _regionManager;
         private string _searchQuery;
         private ObservableCollection<SearchResult> _searchResults;
         private string _errorMessage;
@@ -34,11 +36,14 @@ namespace CryptoViewer.ViewModels
         }
 
         public ICommand SearchCommand { get; }
+        public ICommand NavigateToDetailsCommand { get; }
 
-        public SearchViewModel(CoinGeckoService coinGeckoService)
+        public SearchViewModel(CoinGeckoService coinGeckoService, IRegionManager regionManager)
         {
             _coinGeckoService = coinGeckoService;
+            _regionManager = regionManager;
             SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsync());
+            NavigateToDetailsCommand = new DelegateCommand<SearchResult>(NavigateToDetails);
             SearchResults = new ObservableCollection<SearchResult>();
         }
 
@@ -55,6 +60,8 @@ namespace CryptoViewer.ViewModels
                     {
                         SearchResults.Add(result);
                     }
+                    // Log the number of search results
+                    Debug.WriteLine($"Search results loaded: {SearchResults.Count} items.");
                 }
                 else
                 {
@@ -65,6 +72,28 @@ namespace CryptoViewer.ViewModels
             catch (Exception ex)
             {
                 ErrorMessage = $"Error searching coins: {ex.Message}";
+            }
+        }
+
+        private void NavigateToDetails(SearchResult searchResult)
+        {
+            // Log whether the method is called
+            Debug.WriteLine("NavigateToDetails method called.");
+
+            if (searchResult != null)
+            {
+                // Log the CoinId being navigated to
+                Debug.WriteLine($"Navigating to details for coin ID: {searchResult.Id}");
+                var parameters = new NavigationParameters
+        {
+            { "CoinId", searchResult.Id }
+        };
+                _regionManager.RequestNavigate("MainRegion", "DetailsView", parameters);
+            }
+            else
+            {
+                // Log if searchResult is null
+                Debug.WriteLine("SearchResult is null, cannot navigate.");
             }
         }
     }
