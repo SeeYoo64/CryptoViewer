@@ -27,6 +27,9 @@ namespace CryptoViewer
             // Registering DetailsView
             containerRegistry.RegisterForNavigation<DetailsView, DetailsViewModel>();
 
+            // Registering Search System
+            containerRegistry.RegisterForNavigation<SearchView, SearchViewModel>();
+
         }
 
         protected override void OnInitialized()

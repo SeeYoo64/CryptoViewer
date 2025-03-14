@@ -35,35 +35,31 @@ namespace CryptoViewer.Services
                 }
 
                 string url = BaseUrl + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + count + "&page=1&sparkline=false";
-                Console.WriteLine($"Requesting URL: {BaseUrl}{url}");
-                await Task.Delay(1000);
+                await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Response Content: {responseContent}");
                     return new List<Coin>();
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"JSON Response (Top Currencies): {json}"); // Логируем для отладки
                 var coins = JsonConvert.DeserializeObject<List<Coin>>(json);
                 return coins;
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine($"HttpRequestException: {ex.Message}");
+                Debug.WriteLine($"HttpRequestException: {ex.Message}");
                 if (ex.InnerException != null)
                 {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
                 }
                 return new List<Coin>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"General Exception: {ex.Message}");
+                Debug.WriteLine($"General Exception: {ex.Message}");
                 return new List<Coin>();
             }
         }
@@ -74,63 +70,85 @@ namespace CryptoViewer.Services
             try
             {
                 string url = $"https://api.coingecko.com/api/v3/coins/{coinId}";
-        Console.WriteLine($"Requesting URL: {BaseUrl}{url}");
-        await Task.Delay(1000);
-        HttpResponseMessage response = await _httpClient.GetAsync(url);
+                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}");
+                await Task.Delay(1000); // Delay for limiting queries
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            Console.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
-            string responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Response Content: {responseContent}");
-            return null;
-        }
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Response Content: {responseContent}");
+                    return null;
+                }
 
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine($"JSON Response (Details): {json}");
-        var coin = JsonConvert.DeserializeObject<Coin>(json);
-        if (coin != null && coin.MarketData != null)
-        {
-            // Filling properties from MarketData, if they are empty
-            coin.CurrentPrice ??= coin.MarketData.CurrentPrice?["usd"];
-            coin.TotalVolume ??= coin.MarketData.TotalVolume?["usd"];
-            coin.PriceChangePercentage24h ??= coin.MarketData.PriceChangePercentage24h;
-            coin.High24h = coin.MarketData.High24h?["usd"];
-            coin.Low24h = coin.MarketData.Low24h?["usd"];
+                string json = await response.Content.ReadAsStringAsync();
+                var coin = JsonConvert.DeserializeObject<Coin>(json);
+                if (coin != null && coin.MarketData != null)
+                {
+                    // Filling properties from MarketData, if they are empty
+                    coin.CurrentPrice ??= coin.MarketData.CurrentPrice?["usd"];
+                    coin.TotalVolume ??= coin.MarketData.TotalVolume?["usd"];
+                    coin.PriceChangePercentage24h ??= coin.MarketData.PriceChangePercentage24h;
+                    coin.High24h = coin.MarketData.High24h?["usd"];
+                    coin.Low24h = coin.MarketData.Low24h?["usd"];
+                }
+                    return coin;
+                }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine($"HttpRequestException: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                            Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"General Exception: {ex.Message}");
+                return null;
+            }
         }
-        return coin;
-    }
-    catch (HttpRequestException ex)
-    {
-        Console.WriteLine($"HttpRequestException: {ex.Message}");
-        if (ex.InnerException != null)
-        {
-            Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-        }
-        return null;
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"General Exception: {ex.Message}");
-        return null;
-    }
-}
 
         // Searching coin 
         public async Task<List<SearchResult>> SearchCoinsAsync(string query)
         {
             try
             {
-                string url = $"/search?query={Uri.EscapeDataString(query)}";
+                if (string.IsNullOrEmpty(query))
+                {
+                    return new List<SearchResult>();
+                }
+
+                string url = $"https://api.coingecko.com/api/v3/search?query={Uri.EscapeDataString(query)}";
+                await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Response Content: {responseContent}");
+                    return new List<SearchResult>();
+                }
+
                 string json = await response.Content.ReadAsStringAsync();
                 var searchResponse = JsonConvert.DeserializeObject<dynamic>(json);
                 return JsonConvert.DeserializeObject<List<SearchResult>>(searchResponse.coins.ToString());
             }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine($"HttpRequestException: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                return new List<SearchResult>();
+            }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error searching coins: {ex.Message}");
+                Debug.WriteLine($"General Exception: {ex.Message}");
                 return new List<SearchResult>();
             }
         }
@@ -141,15 +159,15 @@ namespace CryptoViewer.Services
             try
             {
                 string url = $"https://api.coingecko.com/api/v3/coins/{coinId}/tickers?exchange_ids=binance%2C%20kraken%2C%20coinbase&page=1&order=volume_desc";
-                Console.WriteLine($"Requesting URL: {BaseUrl}{url}");
-                await Task.Delay(1000); // Задержка для лимита запросов
+                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}");
+                await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Response Content: {responseContent}");
+                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<Market>();
                 }
 
@@ -159,16 +177,16 @@ namespace CryptoViewer.Services
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine($"HttpRequestException: {ex.Message}");
+                Debug.WriteLine($"HttpRequestException: {ex.Message}");
                 if (ex.InnerException != null)
                 {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
                 }
                 return new List<Market>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"General Exception: {ex.Message}");
+                Debug.WriteLine($"General Exception: {ex.Message}");
                 return new List<Market>();
             }
         }

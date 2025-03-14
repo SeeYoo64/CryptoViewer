@@ -33,12 +33,13 @@ namespace CryptoViewer.ViewModels
         }
 
         public ICommand NavigateToDetailsCommand { get; }
-
+        public ICommand NavigateToSearchCommand { get; }
         public MainViewModel(CoinGeckoService coinGeckoService, IRegionManager regionManager)
         {
             _coinGeckoService = coinGeckoService;
             _regionManager = regionManager;
             NavigateToDetailsCommand = new DelegateCommand<Coin>(NavigateToDetails);
+            NavigateToSearchCommand = new DelegateCommand(NavigateToSearch);
             LoadCoinsAsync().ConfigureAwait(false);
         }
 
@@ -75,5 +76,12 @@ namespace CryptoViewer.ViewModels
                 _regionManager.RequestNavigate("MainRegion", "DetailsView", parameters);
             }
         }
+
+        private void NavigateToSearch()
+        {
+            _regionManager.RequestNavigate("MainRegion", "SearchView");
+        }
+
+
     }
 }
