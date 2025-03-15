@@ -37,6 +37,7 @@ namespace CryptoViewer.ViewModels
 
         public ICommand SearchCommand { get; }
         public ICommand NavigateToDetailsCommand { get; }
+        public ICommand NavigateBackCommand { get; }
 
         public SearchViewModel(CoinGeckoService coinGeckoService, IRegionManager regionManager)
         {
@@ -44,6 +45,7 @@ namespace CryptoViewer.ViewModels
             _regionManager = regionManager;
             SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsync());
             NavigateToDetailsCommand = new DelegateCommand<SearchResult>(NavigateToDetails);
+            NavigateBackCommand = new DelegateCommand(NavigateBack);
             SearchResults = new ObservableCollection<SearchResult>();
         }
 
@@ -77,17 +79,14 @@ namespace CryptoViewer.ViewModels
 
         private void NavigateToDetails(SearchResult searchResult)
         {
-            // Log whether the method is called
-            Debug.WriteLine("NavigateToDetails method called.");
-
             if (searchResult != null)
             {
-                // Log the CoinId being navigated to
+                // Log navigation attempt
                 Debug.WriteLine($"Navigating to details for coin ID: {searchResult.Id}");
                 var parameters = new NavigationParameters
-        {
-            { "CoinId", searchResult.Id }
-        };
+                {
+                    { "CoinId", searchResult.Id }
+                };
                 _regionManager.RequestNavigate("MainRegion", "DetailsView", parameters);
             }
             else
@@ -95,6 +94,13 @@ namespace CryptoViewer.ViewModels
                 // Log if searchResult is null
                 Debug.WriteLine("SearchResult is null, cannot navigate.");
             }
+        }
+
+        private void NavigateBack()
+        {
+            // Log navigation back attempt
+            Debug.WriteLine("Navigating back to MainView from SearchView.");
+            _regionManager.RequestNavigate("MainRegion", "MainView");
         }
     }
 }

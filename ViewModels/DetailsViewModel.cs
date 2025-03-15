@@ -4,14 +4,15 @@ using CryptoViewer.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Prism.Commands;
 using System.Diagnostics;
-
 
 namespace CryptoViewer.ViewModels
 {
     public class DetailsViewModel : BindableBase, INavigationAware
     {
         private readonly CoinGeckoService _coinGeckoService;
+        private readonly IRegionManager _regionManager;
         private string _coinId;
         private Coin _coin;
         private ObservableCollection<Market> _markets;
@@ -42,13 +43,15 @@ namespace CryptoViewer.ViewModels
         }
 
         public ICommand OpenTradeUrlCommand { get; }
+        public ICommand NavigateBackCommand { get; }
 
-        public DetailsViewModel(CoinGeckoService coinGeckoService)
+        public DetailsViewModel(CoinGeckoService coinGeckoService, IRegionManager regionManager)
         {
             _coinGeckoService = coinGeckoService;
+            _regionManager = regionManager;
             OpenTradeUrlCommand = new DelegateCommand<string>(OpenTradeUrl);
+            NavigateBackCommand = new DelegateCommand(NavigateBack);
         }
-
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -86,7 +89,7 @@ namespace CryptoViewer.ViewModels
                     var allMarkets = await _coinGeckoService.GetCoinMarketsAsync(CoinId);
                     if (Coin != null)
                     {
-                        // Filtering markets
+                        // Filter markets: only include pairs where the base currency matches the coin's symbol
                         var filteredMarkets = allMarkets
                             .Where(m => m.Base != null && m.Base.Equals(Coin.Symbol, StringComparison.OrdinalIgnoreCase))
                             .ToList();
@@ -108,7 +111,6 @@ namespace CryptoViewer.ViewModels
             }
         }
 
-
         private void OpenTradeUrl(string url)
         {
             if (!string.IsNullOrEmpty(url))
@@ -128,7 +130,11 @@ namespace CryptoViewer.ViewModels
             }
         }
 
-
-
+        private void NavigateBack()
+        {
+            // Log navigation back attempt
+            Debug.WriteLine("Navigating back to MainView from DetailsView.");
+            _regionManager.RequestNavigate("MainRegion", "MainView");
+        }
     }
 }

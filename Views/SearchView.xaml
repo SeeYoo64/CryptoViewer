@@ -13,26 +13,35 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!-- Back button -->
+        <Button Grid.Row="0" Content="Back" Command="{Binding NavigateBackCommand}" 
+                Style="{StaticResource MaterialDesignRaisedButton}" 
+                Width="100" HorizontalAlignment="Left" Margin="0,0,0,10" />
+
         <!-- Search input and button -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBox materialDesign:HintAssist.Hint="Enter coin name or symbol..." 
                      Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" 
                      Width="300" 
                      Margin="0,0,10,0" />
-            <Button Content="Search" Command="{Binding SearchCommand}" Style="{StaticResource MaterialDesignRaisedButton}" Width="100" />
+            <Button Content="Search" Command="{Binding SearchCommand}" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" Width="100" />
         </StackPanel>
 
         <!-- Error message -->
-        <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,0,0,10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+        <TextBlock Grid.Row="2" Text="{Binding ErrorMessage}" Foreground="Red" 
+                   Margin="0,0,0,10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
         <!-- Search results -->
-        <ListBox Grid.Row="1" ItemsSource="{Binding SearchResults}" 
-         Visibility="{Binding SearchResults, Converter={StaticResource NullToVisibilityConverter}}" 
-         Margin="0,0,0,10" 
-         MouseDoubleClick="ListBox_MouseDoubleClick">
+        <ListBox Grid.Row="2" ItemsSource="{Binding SearchResults}" 
+                 SelectionMode="Single"
+                 Visibility="{Binding SearchResults, Converter={StaticResource NullToVisibilityConverter}}" 
+                 Margin="0,0,0,10" 
+                 MouseDoubleClick="ListBox_MouseDoubleClick">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
