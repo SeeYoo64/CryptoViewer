@@ -1,4 +1,5 @@
 ﻿using CryptoViewer.Models;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,16 +13,17 @@ namespace CryptoViewer.Services
     {
         private readonly HttpClient _httpClient;
         private const string BaseUrl = "https://api.coingecko.com/api/v3";
-        public CoinGeckoService()
-        {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(BaseUrl)
-            };
-            _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-       //     _httpClient.DefaultRequestHeaders.Add("x-cg-pro-api-key", "CG-FBfRyo6YkUwaPN5wqsJpRE2f");
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "CryptoViewer/1.0 (test-app by SeeYoo)"); // User Agent for access, otherwise - Forbidden
+        private readonly string _apiKey;
 
+        public CoinGeckoService(IConfiguration configuration)
+        {
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri(BaseUrl);
+            _apiKey = configuration.GetSection("CoinGecko:ApiKey").Value;
+            if (string.IsNullOrEmpty(_apiKey))
+            {
+                Debug.WriteLine("API Key is missing in configuration.");
+            }
         }
 
         // Get X (default 10) currencies with some kind of sort
@@ -31,22 +33,25 @@ namespace CryptoViewer.Services
             {
                 if (count < 1 || count > 250)
                 {
-                    throw new ArgumentException("per_page must be between 1 and 250", nameof(count));
+                    throw new ArgumentException("per_page must be between 1 and 250", nameof(count)); 
                 }
 
-                string url = BaseUrl + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + count + "&page=1&sparkline=false";
+                string url = BaseUrl + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + count +  $"&page=1&sparkline=false?x_cg_demo_api_key={_apiKey}";
+                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}"); // Log the request URL
                 await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<Coin>();
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                var coins = JsonConvert.DeserializeObject<List<Coin>>(json);
-                return coins;
+                Debug.WriteLine($"JSON Response (Coins): {json}"); // Log the response
+                return JsonConvert.DeserializeObject<List<Coin>>(json);
             }
             catch (HttpRequestException ex)
             {
@@ -69,8 +74,7 @@ namespace CryptoViewer.Services
         {
             try
             {
-                string url = $"https://api.coingecko.com/api/v3/coins/{coinId}";
-                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}");
+                string url = $"https://api.coingecko.com/api/v3/coins/{coinId}?x_cg_demo_api_key={_apiKey}";
                 await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -100,7 +104,7 @@ namespace CryptoViewer.Services
                 Debug.WriteLine($"HttpRequestException: {ex.Message}");
                 if (ex.InnerException != null)
                 {
-                            Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
                 }
                 return null;
             }
@@ -121,7 +125,8 @@ namespace CryptoViewer.Services
                     return new List<SearchResult>();
                 }
 
-                string url = $"https://api.coingecko.com/api/v3/search?query={Uri.EscapeDataString(query)}";
+                string url = $"https://api.coingecko.com/api/v3/search?query={Uri.EscapeDataString(query)}&x_cg_demo_api_key={_apiKey}";
+                Debug.WriteLine(url);
                 await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -158,7 +163,8 @@ namespace CryptoViewer.Services
         {
             try
             {
-                string url = $"https://api.coingecko.com/api/v3/coins/{coinId}/tickers?exchange_ids=binance%2C%20kraken%2C%20coinbase&page=1&order=volume_desc";
+                string url = $"https://api.coingecko.com/api/v3/coins/{coinId}" +
+                    $"/tickers?exchange_ids=binance%2C%20kraken%2C%20coinbase&page=1&order=volume_desc?x_cg_demo_api_key={_apiKey}";
                 Debug.WriteLine($"Requesting URL: {BaseUrl}{url}");
                 await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
@@ -190,12 +196,6 @@ namespace CryptoViewer.Services
                 return new List<Market>();
             }
         }
-
-
-
-
-
-
 
     }
 }
