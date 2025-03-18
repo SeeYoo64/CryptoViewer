@@ -20,9 +20,13 @@
         <!-- Title -->
         <TextBlock Grid.Row="0" Text="{Binding Title}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,10" />
 
-        <!-- Seatch button -->
-        <Button Grid.Row="0"  Content="Search Coins" Command="{Binding NavigateToSearchCommand}" Style="{StaticResource MaterialDesignRaisedButton}" Margin="650,-1,10,11" Width="120" />
-
+        <!-- Navigation buttons -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Search Coins" Command="{Binding NavigateToSearchCommand}" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" Margin="0,0,10,0" Width="120" />
+            <Button Content="Convert Currency" Command="{Binding NavigateToConverterCommand}" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" Width="160" />
+        </StackPanel>
         <!-- Error message -->
         <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,0,0,10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 

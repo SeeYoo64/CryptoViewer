@@ -43,6 +43,9 @@ namespace CryptoViewer
 
             // Registering configuration file
             containerRegistry.RegisterInstance<IConfiguration>(_configuration);
+
+            // Registering ConverterView
+            containerRegistry.RegisterForNavigation<ConverterView, ConverterViewModel>();
         }
 
         protected override void OnInitialized()

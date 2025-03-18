@@ -34,13 +34,22 @@ namespace CryptoViewer.ViewModels
 
         public ICommand NavigateToDetailsCommand { get; }
         public ICommand NavigateToSearchCommand { get; }
+        public ICommand NavigateToConverterCommand { get; }
+
         public MainViewModel(CoinGeckoService coinGeckoService, IRegionManager regionManager)
         {
             _coinGeckoService = coinGeckoService;
             _regionManager = regionManager;
             NavigateToDetailsCommand = new DelegateCommand<Coin>(NavigateToDetails);
             NavigateToSearchCommand = new DelegateCommand(NavigateToSearch);
+            NavigateToConverterCommand = new DelegateCommand(NavigateToConverter);
             LoadCoinsAsync().ConfigureAwait(false);
+        }
+
+        private void NavigateToConverter()
+        {
+            Debug.WriteLine("Navigating to ConverterView.");
+            _regionManager.RequestNavigate("MainRegion", "ConverterView");
         }
 
         private async Task LoadCoinsAsync()
