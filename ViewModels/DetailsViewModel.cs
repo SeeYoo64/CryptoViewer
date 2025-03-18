@@ -89,10 +89,14 @@ namespace CryptoViewer.ViewModels
                     var allMarkets = await _coinGeckoService.GetCoinMarketsAsync(CoinId);
                     if (Coin != null)
                     {
-                        // Filter markets: only include pairs where the base currency matches the coin's symbol
+                        Debug.WriteLine($"Total markets returned: {allMarkets.Count}");
+
+                        // Filter markets only include pairs where the base currency matches the coins symbol
                         var filteredMarkets = allMarkets
                             .Where(m => m.Base != null && m.Base.Equals(Coin.Symbol, StringComparison.OrdinalIgnoreCase))
                             .ToList();
+
+                        Debug.WriteLine($"Filtered markets (base currency {Coin.Symbol}): {filteredMarkets.Count}");
                         Markets = new ObservableCollection<Market>(filteredMarkets);
                     }
                     if (Coin == null)

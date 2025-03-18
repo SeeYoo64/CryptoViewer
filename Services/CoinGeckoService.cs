@@ -127,7 +127,7 @@ namespace CryptoViewer.Services
 
                 string url = $"https://api.coingecko.com/api/v3/search?query={Uri.EscapeDataString(query)}&x_cg_demo_api_key={_apiKey}";
                 Debug.WriteLine(url);
-                await Task.Delay(1000); // Delay for limiting queries
+                await Task.Delay(1000)
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
@@ -158,15 +158,13 @@ namespace CryptoViewer.Services
             }
         }
 
-
         public async Task<List<Market>> GetCoinMarketsAsync(string coinId)
         {
             try
             {
-                string url = $"https://api.coingecko.com/api/v3/coins/{coinId}" +
-                    $"/tickers?exchange_ids=binance%2C%20kraken%2C%20coinbase&page=1&order=volume_desc?x_cg_demo_api_key={_apiKey}";
+                string url = $"https://api.coingecko.com/api/v3/coins/{coinId}/tickers?page=1&order=volume_desc&x_cg_demo_api_key={_apiKey}";
                 Debug.WriteLine($"Requesting URL: {BaseUrl}{url}");
-                await Task.Delay(1000); // Delay for limiting queries
+                await Task.Delay(1000);
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
@@ -178,6 +176,7 @@ namespace CryptoViewer.Services
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine($"JSON Response (Markets): {json}"); // Log the response
                 var tickersResponse = JsonConvert.DeserializeObject<dynamic>(json);
                 return JsonConvert.DeserializeObject<List<Market>>(tickersResponse.tickers.ToString());
             }
