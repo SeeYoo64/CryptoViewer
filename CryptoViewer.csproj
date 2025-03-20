@@ -12,12 +12,36 @@
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="MaterialDesignThemes.Wpf" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Prism.Core" Version="9.0.537" />
     <PackageReference Include="Prism.Unity" Version="9.0.537" />
     <PackageReference Include="Prism.Wpf" Version="9.0.537" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Resources\Strings.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Strings.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Resources\Strings.uk-UA.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Strings.uk-UA.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\Strings.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Strings.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Strings.uk-UA.resx">
+			<Generator></Generator>
+			<Culture>uk-UA</Culture>
+		</EmbeddedResource>
+	</ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
@@ -25,4 +49,10 @@
     </None>
   </ItemGroup>
 
-</Project>
+	<ProjectExtensions>
+	<VisualStudio>
+	<UserProperties />
+	 </VisualStudio>
+	</ProjectExtensions>
+
+	</Project>

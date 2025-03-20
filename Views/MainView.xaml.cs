@@ -1,18 +1,14 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace CryptoViewer.Views
 {
-    public partial class MainView
+    public partial class MainView : UserControl
     {
         public MainView()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Button clicked!");
+            Debug.WriteLine("MainView: Constructor called.");
         }
     }
 }
