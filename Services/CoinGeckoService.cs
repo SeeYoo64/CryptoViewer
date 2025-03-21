@@ -37,20 +37,17 @@ namespace CryptoViewer.Services
                 }
 
                 string url = BaseUrl + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + count +  $"&page=1&sparkline=false?x_cg_demo_api_key={_apiKey}";
-                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}"); // Log the request URL
-                await Task.Delay(1000); // Delay for limiting queries
+                await Task.Delay(5000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<Coin>();
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"JSON Response (Coins): {json}"); // Log the response
                 return JsonConvert.DeserializeObject<List<Coin>>(json);
             }
             catch (HttpRequestException ex)
@@ -82,7 +79,6 @@ namespace CryptoViewer.Services
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    Debug.WriteLine($"Response Content: {responseContent}");
                     return null;
                 }
 
@@ -134,7 +130,6 @@ namespace CryptoViewer.Services
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<SearchResult>();
                 }
 
@@ -176,7 +171,6 @@ namespace CryptoViewer.Services
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"JSON Response (Markets): {json}"); // Log the response
                 var tickersResponse = JsonConvert.DeserializeObject<dynamic>(json);
                 return JsonConvert.DeserializeObject<List<Market>>(tickersResponse.tickers.ToString());
             }
@@ -201,7 +195,6 @@ namespace CryptoViewer.Services
             try
             {
                 string url = $"https://api.coingecko.com/api/v3/simple/supported_vs_currencies?x_cg_demo_api_key={_apiKey}";
-                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}"); // Log the request URL
                 await Task.Delay(1000); // Delay for rate limiting
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -214,7 +207,6 @@ namespace CryptoViewer.Services
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"JSON Response (Supported Currencies): {json}"); // Log the response
                 return JsonConvert.DeserializeObject<List<string>>(json);
             }
             catch (HttpRequestException ex)
@@ -246,7 +238,6 @@ namespace CryptoViewer.Services
                 // Build query string with from and to currencies
                 string toCurrenciesString = string.Join(",", toCurrencies);
                 string url = $"https://api.coingecko.com/api/v3/simple/price?ids={fromCurrency}&vs_currencies={toCurrenciesString}&x_cg_demo_api_key={_apiKey}";
-                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}"); // Log the request URL
                 await Task.Delay(1000); // Delay for rate limiting
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -259,7 +250,6 @@ namespace CryptoViewer.Services
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"JSON Response (Exchange Rates): {json}"); // Log the response
                 return JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, decimal>>>(json)
                     ?.GetValueOrDefault(fromCurrency) ?? new Dictionary<string, decimal>();
             }
@@ -292,12 +282,10 @@ namespace CryptoViewer.Services
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<string>();
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine($"JSON Response (Coin IDs): {json}"); // Log the response
                 var coins = JsonConvert.DeserializeObject<List<CoinListItem>>(json);
                 return coins != null ? coins.Select(c => c.Id).ToList() : new List<string>();
             }
