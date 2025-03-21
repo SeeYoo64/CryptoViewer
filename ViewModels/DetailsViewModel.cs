@@ -63,7 +63,7 @@ namespace CryptoViewer.ViewModels
                 LoadCoinDetailsAsync().ConfigureAwait(false);
             }
             else
-            {
+            { 
                 // Log if CoinId is not found
                 Debug.WriteLine("DetailsViewModel: No CoinId provided in navigation parameters.");
             }
@@ -136,8 +136,6 @@ namespace CryptoViewer.ViewModels
 
         private void NavigateBack()
         {
-            // Log navigation back attempt
-            Debug.WriteLine("Navigating back to MainView from DetailsView.");
             _regionManager.RequestNavigate("MainRegion", "MainView");
         }
     }

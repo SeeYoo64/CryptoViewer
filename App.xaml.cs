@@ -24,10 +24,6 @@ namespace CryptoViewer
                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
-
-            // Initialize localization (default to en-US)
-            LocalizationManager.SetCulture("en-US");
-
         }
 
         // Here we will register services and views

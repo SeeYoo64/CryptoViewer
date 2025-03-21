@@ -9,7 +9,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <converters:StringResourceConverter x:Key="StringResourceConverter" x:Shared="False" />
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -19,39 +18,121 @@
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Grid.Row="0" Text="{Binding Title}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,10" />
+        <TextBlock Grid.Row="0" Text="{DynamicResource Title}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,10" />
 
         <!-- Navigation buttons -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <Button Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=SearchCoinsButton}" Command="{Binding NavigateToSearchCommand}" 
+            <Button Content="{DynamicResource SearchCoinsButton}" Command="{Binding NavigateToSearchCommand}" 
                     Style="{StaticResource MaterialDesignRaisedButton}" Margin="0,0,10,0" Width="120" />
-            <Button Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=ConvertCurrencyButton}" Command="{Binding NavigateToConverterCommand}" 
-                    Style="{StaticResource MaterialDesignRaisedButton}" Width="180" />
-            <ComboBox Grid.Row="0" ItemsSource="{Binding SupportedLanguages}" 
-                  SelectedItem="{Binding SelectedLanguage, UpdateSourceTrigger=PropertyChanged}" 
-                  Width="100" HorizontalAlignment="Right" Margin="40,0,0,0" />
+            <Button Content="{DynamicResource ConvertCurrencyButton}" Command="{Binding NavigateToConverterCommand}" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" Width="200" />
+            <Menu materialDesign:MenuAssist.TopLevelMenuItemHeight="25" Margin="10,10,10,10">
+                <MenuItem
+                Header="Language">
+                    <MenuItem
+                  Header="English" Click="SwitchToEnglish"/>
+                    <MenuItem
+                  Header="Ukranian" Click="SwitchToUkranian"/>
+                </MenuItem>
+            </Menu>
         </StackPanel>
+        
+
+
         <!-- Error message -->
         <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,0,0,10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
         <!-- Spreadsheet of coins -->
-        <materialDesign:Card Grid.Row="3" Padding="10">
-            <DataGrid x:Name="CoinsDataGrid" ItemsSource="{Binding Coins}" AutoGenerateColumns="False" IsReadOnly="True" 
-                      CanUserAddRows="False">
-                <DataGrid.Resources>
-                    <converters:BindingProxy x:Key="proxy" Data="{Binding DataContext, ElementName=CoinsDataGrid}" />
-                </DataGrid.Resources>
+        <materialDesign:Card Grid.Row="2" Padding="10">
+            <DataGrid ItemsSource="{Binding Coins}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=RankHeader}" Binding="{Binding MarketCapRank}" Width="Auto" />
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=NameHeader}" Binding="{Binding Name}" Width="*" />
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=SymbolHeader}" Binding="{Binding Symbol}" Width="Auto" />
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=PriceHeader}" Binding="{Binding CurrentPrice, StringFormat={}{0:C2}}" Width="Auto" />
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=Change24hHeader}" Binding="{Binding PriceChangePercentage24h, StringFormat={}{0:N2}%}" Width="Auto" />
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=VolumeHeader}" Binding="{Binding TotalVolume, StringFormat={}{0:C0}}" Width="Auto" />
+                    <!-- Rank Column -->
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{DynamicResource RankHeader}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding MarketCapRank}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Name Column -->
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{DynamicResource NameHeader}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Symbol Column -->
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{DynamicResource SymbolHeader}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Symbol}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Price Column -->
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{DynamicResource PriceHeader}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding CurrentPrice, StringFormat={}{0:C2}}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- 24h Change Column -->
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{DynamicResource Change24hHeader}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding PriceChangePercentage24h, StringFormat={}{0:N2}%}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Volume Column -->
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{DynamicResource VolumeHeader}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TotalVolume, StringFormat={}{0:C0}}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
                 </DataGrid.Columns>
                 <DataGrid.InputBindings>
-                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding NavigateToDetailsCommand}" 
-                                  CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding NavigateToDetailsCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                 </DataGrid.InputBindings>
             </DataGrid>
         </materialDesign:Card>

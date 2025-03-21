@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="Title">КриптоВьювер - Топ валюти</sys:String>
+    <sys:String x:Key="AmountHint">Кількість</sys:String>
+    <sys:String x:Key="BackButton">Назад</sys:String>
+    <sys:String x:Key="Change24hHeader">Зміна 24г (%)</sys:String>
+    <sys:String x:Key="Change24hLabelFormat">Зміна 24г: {0}%</sys:String>
+    <sys:String x:Key="ConvertButton">Конвертувати</sys:String>
+    <sys:String x:Key="ConvertCurrencyButton">Конвертувати валюту</sys:String>
+    <sys:String x:Key="CurrencyConverterTitle">Конвертер валют</sys:String>
+    <sys:String x:Key="DetailsTitleFormat">Деталі для {0}</sys:String>
+    <sys:String x:Key="ExchangeHeader">Біржа</sys:String>
+    <sys:String x:Key="FromCurrencyHint">З валюти</sys:String>
+    <sys:String x:Key="GoButton">Гоу</sys:String>
+    <sys:String x:Key="High24hLabelFormat">Макс 24г: {0}</sys:String>
+    <sys:String x:Key="LastUpdatedLabelFormat">Останнє оновлення: {0}</sys:String>
+    <sys:String x:Key="Low24hLabelFormat">Мін 24г: {0}</sys:String>
+    <sys:String x:Key="MarketsLabel">Ринки:</sys:String>
+    <sys:String x:Key="NameHeader">Назва</sys:String>
+    <sys:String x:Key="PriceHeader">Ціна (USD)</sys:String>
+    <sys:String x:Key="PriceLabelFormat">Ціна (USD): {0}</sys:String>
+    <sys:String x:Key="PriceMarketHeader">Ціна</sys:String>
+    <sys:String x:Key="RankHeader">Ранг</sys:String>
+    <sys:String x:Key="SearchCoinsButton">Пошук</sys:String>
+    <sys:String x:Key="SearchHint">Введіть назву або символ монети...</sys:String>
+    <sys:String x:Key="SymbolHeader">Символ</sys:String>
+    <sys:String x:Key="SymbolLabelFormat">Символ: {0}</sys:String>
+    <sys:String x:Key="ToCurrencyHint">В валюту</sys:String>
+    <sys:String x:Key="TradeHeader">Торгівля</sys:String>
+    <sys:String x:Key="VolumeHeader">Обсяг (USD)</sys:String>
+    <sys:String x:Key="VolumeLabelFormat">Обсяг (USD): {0}</sys:String>
+    <sys:String x:Key="VolumeMarketHeader">Обсяг</sys:String>
+</ResourceDictionary>

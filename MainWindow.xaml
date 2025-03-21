@@ -11,7 +11,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Custom Title -->
         <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" MouseLeftButtonDown="ColorZone_MouseLeftButtonDown">
             <DockPanel>
 
@@ -33,7 +32,6 @@
             </DockPanel>
         </materialDesign:ColorZone>
 
-        <!-- Main Content -->
         <Grid Grid.Row="1">
             <ContentControl prism:RegionManager.RegionName="MainRegion" />
         </Grid>

@@ -10,7 +10,6 @@
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <converters:CurrencyFormatConverter x:Key="CurrencyFormatConverter" />
-        <converters:StringResourceConverter x:Key="StringResourceConverter" />
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -21,12 +20,12 @@
         </Grid.RowDefinitions>
 
         <!-- Back button -->
-        <Button Grid.Row="0" Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=BackButton}" Command="{Binding NavigateBackCommand}" 
+        <Button Grid.Row="0" Content="{DynamicResource BackButton}" Command="{Binding NavigateBackCommand}" 
                 Style="{StaticResource MaterialDesignRaisedButton}" 
                 Width="100" HorizontalAlignment="Left" Margin="0,0,0,10" />
 
         <!-- Header -->
-        <TextBlock Grid.Row="1" Text="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=CurrencyConverterTitle}"
+        <TextBlock Grid.Row="1" Text="{DynamicResource CurrencyConverterTitle}"
                    Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,10" />
 
         <!-- Error message -->
@@ -36,20 +35,20 @@
         <!-- Converter controls -->
         <StackPanel Grid.Row="3" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBox materialDesign:HintAssist.Hint="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=AmountHint}"
+                <TextBox materialDesign:HintAssist.Hint="{DynamicResource AmountHint}"
                          Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" 
                          Width="100" Margin="0,0,10,0" />
-                <ComboBox materialDesign:HintAssist.Hint="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=FromCurrencyHint}" 
+                <ComboBox materialDesign:HintAssist.Hint="{DynamicResource FromCurrencyHint}" 
                           ItemsSource="{Binding CoinIds}" 
                           SelectedItem="{Binding SelectedFromCurrency}" 
                           Width="150" Margin="0,0,10,0" />
-                <ComboBox materialDesign:HintAssist.Hint="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=ToCurrencyHint}" 
+                <ComboBox materialDesign:HintAssist.Hint="{DynamicResource ToCurrencyHint}"
                           ItemsSource="{Binding VsCurrencies}" 
                           SelectedItem="{Binding SelectedToCurrency}" 
                           Width="150" />
             </StackPanel>
-            <Button Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=ConvertButton}" Command="{Binding ConvertCommand}" 
-                    Style="{StaticResource MaterialDesignRaisedButton}" Width="100" HorizontalAlignment="Left" />
+            <Button Content="{DynamicResource ConvertButton}" Command="{Binding ConvertCommand}" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" Width="160" HorizontalAlignment="Left" />
             <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,10,0,0">
                 <TextBlock.Text>
                     <MultiBinding Converter="{StaticResource CurrencyFormatConverter}">

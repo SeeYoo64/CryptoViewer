@@ -33,17 +33,18 @@ namespace CryptoViewer.Services
             {
                 if (count < 1 || count > 250)
                 {
-                    throw new ArgumentException("per_page must be between 1 and 250", nameof(count)); 
+                    throw new ArgumentException("per_page must be between 1 and 250", nameof(count));
                 }
 
-                string url = BaseUrl + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + count +  $"&page=1&sparkline=false?x_cg_demo_api_key={_apiKey}";
-                await Task.Delay(5000); // Delay for limiting queries
+                string url = BaseUrl + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + count + $"&page=1&sparkline=false?x_cg_demo_api_key={_apiKey}";
+                await Task.Delay(1000); // Delay for limiting queries
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<Coin>();
                 }
 
@@ -79,6 +80,7 @@ namespace CryptoViewer.Services
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Response Content: {responseContent}");
                     return null;
                 }
 
@@ -93,8 +95,8 @@ namespace CryptoViewer.Services
                     coin.High24h = coin.MarketData.High24h?["usd"];
                     coin.Low24h = coin.MarketData.Low24h?["usd"];
                 }
-                    return coin;
-                }
+                return coin;
+            }
             catch (HttpRequestException ex)
             {
                 Debug.WriteLine($"HttpRequestException: {ex.Message}");
@@ -130,6 +132,7 @@ namespace CryptoViewer.Services
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<SearchResult>();
                 }
 
@@ -158,7 +161,6 @@ namespace CryptoViewer.Services
             try
             {
                 string url = $"https://api.coingecko.com/api/v3/coins/{coinId}/tickers?page=1&order=volume_desc&x_cg_demo_api_key={_apiKey}";
-                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}");
                 await Task.Delay(1000);
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -274,7 +276,6 @@ namespace CryptoViewer.Services
             try
             {
                 string url = $"https://api.coingecko.com/api/v3/coins/list?x_cg_demo_api_key={_apiKey}";
-                Debug.WriteLine($"Requesting URL: {BaseUrl}{url}"); // Log the request URL
                 await Task.Delay(1000); // Delay for rate limiting
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
@@ -282,6 +283,7 @@ namespace CryptoViewer.Services
                 {
                     Debug.WriteLine($"API Error: {response.StatusCode} - {response.ReasonPhrase}");
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    Debug.WriteLine($"Response Content: {responseContent}");
                     return new List<string>();
                 }
 

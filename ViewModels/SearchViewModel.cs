@@ -81,8 +81,6 @@ namespace CryptoViewer.ViewModels
         {
             if (searchResult != null)
             {
-                // Log navigation attempt
-                Debug.WriteLine($"Navigating to details for coin ID: {searchResult.Id}");
                 var parameters = new NavigationParameters
                 {
                     { "CoinId", searchResult.Id }
@@ -98,8 +96,6 @@ namespace CryptoViewer.ViewModels
 
         private void NavigateBack()
         {
-            // Log navigation back attempt
-            Debug.WriteLine("Navigating back to MainView from SearchView.");
             _regionManager.RequestNavigate("MainRegion", "MainView");
         }
     }

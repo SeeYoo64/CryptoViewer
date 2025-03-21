@@ -9,7 +9,6 @@
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <converters:StringResourceConverter x:Key="StringResourceConverter" />
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -19,18 +18,18 @@
         </Grid.RowDefinitions>
 
         <!-- Back button -->
-        <Button Grid.Row="0" Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=BackButton}"  Command="{Binding NavigateBackCommand}" 
+        <Button Grid.Row="0" Content="{DynamicResource BackButton}" Command="{Binding NavigateBackCommand}" 
                 Style="{StaticResource MaterialDesignRaisedButton}" 
                 Width="100" HorizontalAlignment="Left" Margin="0,0,0,10" />
 
         <!-- Search input and button -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox materialDesign:HintAssist.Hint="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=SearchHint}"
+            <TextBox materialDesign:HintAssist.Hint="{DynamicResource SearchHint}" 
                      Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" 
                      Width="300" 
                      Margin="0,0,10,0" />
-            <Button Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=SearchCoinsButton}"  Command="{Binding SearchCommand}" 
-                    Style="{StaticResource MaterialDesignRaisedButton}" Width="160" />
+            <Button Content="{DynamicResource SearchCoinsButton}"  Command="{Binding SearchCommand}" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" Width="100" />
         </StackPanel>
 
         <!-- Error message -->

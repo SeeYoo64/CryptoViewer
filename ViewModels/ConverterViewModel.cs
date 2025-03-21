@@ -174,7 +174,6 @@ namespace CryptoViewer.ViewModels
 
         private void NavigateBack()
         {
-            Debug.WriteLine("Navigating back to MainView from ConverterView.");
             _regionManager.RequestNavigate("MainRegion", "MainView");
         }
     }

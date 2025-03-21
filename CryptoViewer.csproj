@@ -19,40 +19,10 @@
     <PackageReference Include="Prism.Wpf" Version="9.0.537" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="Resources\Strings.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Strings.resx</DependentUpon>
-		</Compile>
-		<Compile Update="Resources\Strings.uk-UA.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Strings.uk-UA.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Update="Resources\Strings.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Strings.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Resources\Strings.uk-UA.resx">
-			<Generator></Generator>
-			<Culture>uk-UA</Culture>
-		</EmbeddedResource>
-	</ItemGroup>
-
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-	<ProjectExtensions>
-	<VisualStudio>
-	<UserProperties />
-	 </VisualStudio>
-	</ProjectExtensions>
-
-	</Project>
+</Project>

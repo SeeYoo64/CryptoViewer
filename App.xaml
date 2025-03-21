@@ -4,18 +4,17 @@
                         xmlns:prism="http://prismlibrary.com/"
                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Application.Resources>
-        
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+
                 <materialDesign:BundledTheme BaseTheme="Light"
                                      PrimaryColor="DeepPurple"
                                      SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
-                </ResourceDictionary.MergedDictionaries>
-        
+                <ResourceDictionary Source="Resources/Resources.en.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        
     </Application.Resources>
 </prism:PrismApplication>

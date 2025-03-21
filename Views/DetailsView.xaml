@@ -9,7 +9,7 @@
              d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <converters:StringResourceConverter x:Key="StringResourceConverter" />
+        <converters:LocalizedFormatConverter x:Key="LocalizedFormatConverter" />
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -18,58 +18,187 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Tittle -->
-        <TextBlock Grid.Row="0" Text="{Binding Coin.Name, StringFormat='Details for {0}'}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,10" />
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Margin="0,0,0,10" 
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                    <Binding Path="Coin.Name" />
+                    <Binding Source="DetailsTitleFormat" />
+                    <!-- Pass the resource key as a string -->
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
 
         <!-- Error message -->
-        <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,0,0,10" Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+        <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Red" Margin="0,0,0,10" 
+                   Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
 
-        <!-- Coin Details -->
         <materialDesign:Card Grid.Row="2" Padding="10">
             <StackPanel>
-                <StackPanel.Resources>
-                    <converters:BindingProxy x:Key="proxy" Data="{Binding DataContext}" />
-                </StackPanel.Resources>
-                <TextBlock Text="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=NameHeader}" Style="{StaticResource MaterialDesignBody1TextBlock}" />
-                <TextBlock Text="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=PriceLabelFormat}" />
-                <TextBlock Text="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=VolumeLabelFormat}" Style="{StaticResource MaterialDesignBody1TextBlock}" />
-                <TextBlock Text="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=Change24hLabelFormat}" Style="{StaticResource MaterialDesignBody1TextBlock}" />
-                <TextBlock Text="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=High24hLabelFormat}" Style="{StaticResource MaterialDesignBody1TextBlock}" />
-                <TextBlock Text="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=Low24hLabelFormat}" Style="{StaticResource MaterialDesignBody1TextBlock}" />
-                <TextBlock Text="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=LastUpdatedLabelFormat}" Style="{StaticResource MaterialDesignBody1TextBlock}" />
-                <!-- Markets section with Back button on the same level -->
+                <!-- Coin Details -->
+                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                            <Binding Path="Coin.Symbol" />
+                            <Binding Source="SymbolLabelFormat" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                            <Binding Path="Coin.CurrentPrice" StringFormat="{}{0:C2}" />
+                            <Binding Source="PriceLabelFormat" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                            <Binding Path="Coin.TotalVolume" StringFormat="{}{0:C0}" />
+                            <Binding Source="VolumeLabelFormat" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                            <Binding Path="Coin.PriceChangePercentage24h" StringFormat="{}{0:N2}%" />
+                            <Binding Source="Change24hLabelFormat" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                            <Binding Path="Coin.High24h" StringFormat="{}{0:C2}" />
+                            <Binding Source="High24hLabelFormat" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                            <Binding Path="Coin.Low24h" StringFormat="{}{0:C2}" />
+                            <Binding Source="Low24hLabelFormat" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource LocalizedFormatConverter}">
+                            <Binding Path="Coin.MarketData.LastUpdated" StringFormat="{}{0:yyyy-MM-dd HH:mm}" />
+                            <Binding Source="LastUpdatedLabelFormat" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <!-- Markets Section -->
                 <Grid Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Markets:" 
+
+                    <TextBlock Grid.Column="0" 
+                               Text="{DynamicResource MarketsLabel}" 
                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}" 
                                VerticalAlignment="Center" />
-                    <Button Grid.Column="2" Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=BackButton}" Command="{Binding NavigateBackCommand}" 
+
+                    <Button Grid.Column="2" 
+                            Content="{DynamicResource BackButton}" 
+                            Command="{Binding NavigateBackCommand}" 
                             Style="{StaticResource MaterialDesignRaisedButton}" 
-                            Width="100" HorizontalAlignment="Right" />
+                            Width="100" 
+                            HorizontalAlignment="Right" />
                 </Grid>
-                <!-- List of Markets -->
-                <DataGrid ItemsSource="{Binding Markets}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" 
-                          Margin="0,5,0,0" GridLinesVisibility="None" MaxHeight="200" 
-                          ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    
+
+                <!-- Markets DataGrid -->
+                <DataGrid ItemsSource="{Binding Markets}" 
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          CanUserAddRows="False" 
+                          Margin="0,5,0,0" 
+                          GridLinesVisibility="None" 
+                          MaxHeight="200" 
+                          ScrollViewer.CanContentScroll="True" 
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=ExchangeHeader}" Binding="{Binding MarketInfo.Name}" Width="2*" />
-                        <DataGridTextColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=PriceHeader}" Binding="{Binding FormattedLastPrice}" Width="1*" />
-                        <DataGridTextColumn  Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=VolumeHeader}" Binding="{Binding Volume, StringFormat={}{0:C0}}" Width="1*" />
-                        <DataGridTemplateColumn Header="{Binding Data, Source={StaticResource proxy}, Converter={StaticResource StringResourceConverter}, ConverterParameter=TradeHeader}" Width="0.5*">
+                        
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{DynamicResource ExchangeHeader}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="{Binding Converter={StaticResource StringResourceConverter}, ConverterParameter=GoButton}" Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.OpenTradeUrlCommand}" 
-                                            CommandParameter="{Binding TradeUrl}" 
-                                            Visibility="{Binding TradeUrl, Converter={StaticResource NullToVisibilityConverter}}" 
-                                            Style="{StaticResource MaterialDesignRaisedButton}" Width="40" Padding="0" Margin="2,0" />
+                                    <TextBlock Text="{Binding MarketInfo.Name}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+
+                        <!-- Name Column -->
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{DynamicResource PriceHeader}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FormattedLastPrice}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+
+                        <!-- Name Column -->
+                        <DataGridTemplateColumn Width="*">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{DynamicResource VolumeHeader}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Volume}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+
+
+                        <DataGridTemplateColumn Width="0.5*">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{DynamicResource TradeHeader}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="{DynamicResource GoButton}" 
+                                            Command="{Binding DataContext.OpenTradeUrlCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                            CommandParameter="{Binding TradeUrl}" 
+                                            Visibility="{Binding TradeUrl, Converter={StaticResource NullToVisibilityConverter}}" 
+                                            Style="{StaticResource MaterialDesignRaisedButton}" 
+                                            Width="50" 
+                                            Padding="0" 
+                                            Margin="2,0" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            
+                        </DataGridTemplateColumn>
+                        
                     </DataGrid.Columns>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
